@@ -17,14 +17,24 @@ public class Point {
 	private int id;
 	private int x;
 	private int y;
+	private int i;
+	private int j;
+	private int player=-1;
 	private GameView gv;
 
 	private int state;
 
-	public Point(int x, int y) {
+	public Point(int x, int y, int i, int j) {
 
 		this.x = x;
 		this.y = y;
+		this.i=i;
+		this.j=j;
+	}
+
+	public boolean getSelected()
+	{
+		return selected;
 	}
 
 	public int getX() {
@@ -38,19 +48,27 @@ public class Point {
 	public int getRadius() {
 		return radius;
 	}
-	public boolean getDwon(){
+	public boolean getDown(){
 		return Down;
 	}
 	public boolean getRight(){
 		return Right;
 	}
-
-	public void setX(int x) {
-		this.x = x;
+	public int geti(){
+		return i;
+	}
+	public int getj(){
+		return j;
 	}
 
-	public void setY(int y) {
-		this.y = y;
+    public boolean setPlayer(boolean player){
+		if(this.player==-1){
+			if(player)
+		this.player=1;
+		else this.player=0;
+		return true;
+		}
+		return false;
 	}
 
 	public void setRadius(int radius) {
@@ -66,7 +84,9 @@ public class Point {
 	public void draw(Canvas canvas, int squarex, int squarey) {
 		Paint paint = new Paint();
 		paint.setARGB(100, 255, 0, 0);
-		paint.setStrokeWidth(5);
+		paint.setStrokeWidth(20);
+		paint.setTextAlign(Paint.Align.CENTER);
+		paint.setTextSize(30);
 		if(this.selected){
 			canvas.drawCircle(x, y, 2*radius, paint);
 		}
@@ -79,6 +99,13 @@ public class Point {
 		if(this.Right){
 			canvas.drawLine(x, y, x+squarex, y, paint);
 		}
+		if (player==0){
+			canvas.drawText("a",x+squarex/2,y+squarey/2,paint);
+		}
+		if(player==1){
+			canvas.drawText("b",x+squarex/2,y+squarey/2,paint);
+		}
+		
 
 	}
 	

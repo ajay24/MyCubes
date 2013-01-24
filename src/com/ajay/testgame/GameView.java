@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.graphics.*;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
@@ -30,6 +31,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	private GameLogic mGameLogic;
 	private ArrayBlockingQueue<InputObject> inputObjectPool;
 	private GameStastics gamestats;
+	private boolean player=true;
+	private int score_a;
+	private int score_b;
 
 	public GameView(Context context) {
 		super(context);
@@ -60,6 +64,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 			}
 		}
+		Paint paint=new Paint();
+		paint.setARGB(255,0,255,255);
+		paint.setStrokeWidth(20);
+		if(player){
+		canvas.drawText("Player B",100,100,paint);
+		} else{
+			canvas.drawText("Player A",100,100,paint);
+		}
+		gamestats.draw(canvas,score_a,score_b);
 
 	}
 
@@ -81,7 +94,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			for (int j = 0; j < lengthy; j++) {
 				int pointx = squarex / 2 + i * squarex;
 				int pointy = squarey / 2 + j * squarey;
-				points[i][j] = new Point(pointx, pointy);
+				points[i][j] = new Point(pointx, pointy, i, j);
 				
 
 			}
@@ -94,6 +107,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		mGameLogic.setGameState(GameLogic.PAUSE);
+		//mGameLogic.destroy();
 
 	}
 
@@ -150,6 +164,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 			if (currentselected != null) {
 				previousselected = currentselected;
+				currentselected=null;
 			}
 			for (int i = 0; i < lengthx; i++) {
 				for (int j = 0; j < lengthy; j++) {
@@ -158,19 +173,53 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 							&& cursor_y - points[i][j].getY() < 20
 							&& cursor_y - points[i][j].getY() > -20) {
 						
-						currentselected = points[i][j];
+						
+						if(!points[i][j].getSelected()){
+								currentselected = points[i][j];
+								currentselected.setselected(true);
+						}
+						
 
 					}
 				}
 			}
 
-			currentselected.setselected(true);
-			if (previousselected != null) {
+			
+			
+			if (previousselected != null&&currentselected!=null) {
 				if(currentselected.rangecheck(previousselected, squarex, squarey)){
+					
+				//	int i=previousselected.geti();
+				//	int j=previousselected.getj();
+				boolean madepoint=false;
+					for(int i=0;i<=lengthx-1;i++){
+						for(int j=0;j<=lengthy-1;j++){
+							if(points[i][j].getDown() && points[i][j].getRight()
+							   && points[i+1][j].getDown()&&
+							   points[i][j+1].getRight()){
+								if(points[i][j].setPlayer(player)){
+									
+									madepoint=true;
+									if(player){
+										score_b++;
+									}else{
+										score_a++;
+									}
+									
+								}
+								
+
+							}
+						}
+					}
+				
 					currentselected.setselected(false);
 					currentselected=null;
 					previousselected.setselected(false);
 					previousselected=null;
+					if(!madepoint){
+					changeturn();
+					}
 				}
 				else{
 					previousselected.setselected(false);
@@ -179,9 +228,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			}
 			
 			selection_changed=false;
-
 		}
 
+	}
+
+	private void changeturn()
+	{
+		player=!player;
 	}
 
 }
