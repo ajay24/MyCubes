@@ -1,14 +1,39 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/container"
+    android:paddingTop="40dp"
+     
+    android:background="@android:color/background_dark" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/hello_world"
-        tools:context=".MainActivity" />
+    <com.ajay.testgame.MyButton
+        android:id="@+id/button1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="60dp"
+        android:text="New Game"
+        android:textColor="@android:color/holo_blue_light"
+        android:textSize="20dp" />
 
-</RelativeLayout>
+     <com.ajay.testgame.MyButton
+        android:id="@+id/button2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="60dp"
+        android:textColor="@android:color/holo_blue_light"
+        android:textSize="20dp"
+        android:text="Exit"
+        />
+
+     <Button
+         android:id="@+id/button3"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="Button" />
+
+</LinearLayout>
